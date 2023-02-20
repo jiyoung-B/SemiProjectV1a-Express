@@ -26,6 +26,24 @@ router.get('/login', (req, res) => {
     res.render('login', {title: '회원로그인'});
 });
 
+router.post('/login', async(req, res) => {
+    let { uid, pwd} = req.body;
+    let viewName = '/member/loginfail';
+    let isLogin = new Member().selectOne(uid, pwd).then(result => result);
+    // console.log(await isLogin); // 로그인 가능한 값은 1, 비정상은 0
+    if (await isLogin > 0 ){
+        viewName = '/member/myinfo'
+        req.session.userid = uid; // 입력받은 아이디를 세션변수로 등록
+    }
+    res.redirect(303, viewName);
+    //res.render('login', {title: '회원로그인'});
+});
+
+router.get('/logout', (req, res) => {
+    req.session.destroy( () => req.session);
+    res.redirect(303, '/');
+});
+
 router.get('/myinfo', (req, res) => {
     res.render('myinfo', {title: '회원정보'});
 });

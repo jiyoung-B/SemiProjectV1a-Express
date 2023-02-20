@@ -1,8 +1,11 @@
 {{#section 'css'}}
     <style>
         #view { width:700px; margin: 0 auto;}
-        label {  display: inline-block; width: 110px; text-align: right; font-weight: bold; margin-right: 10px; }
-        #contents { border: 1px solid #eeeeee; display: inline-block; width: 560px; min-height: 350px;}
+        label { display: inline-block; width: 110px; text-align: right; font-weight: bold; margin-right: 10px; }
+        #contents { border: 1px solid #eeeeee;
+            display: inline-block;
+            width: 560px; min-height:350px;
+            white-space: pre}
     </style>
 {{/section}}
 
@@ -34,10 +37,10 @@
         {{/bds}}
         <div><label></label>
             <button type="button"
-                    onclick="location.href='write.html'" id="newbtn">새글쓰기</button>
-            <button type="button" id="list">목록으로</button>
-            <button type="button">수정하기</button>
-            <button type="button">삭제하기</button>
+                    onclick="location.href='/board/write'">새글쓰기</button>
+            <button type="button" onclick="location.href='/board/list'">목록으로</button>
+            <button type="button" id="updatebtn">수정하기</button>
+            <button type="button" id="deletebtn">삭제하기</button>
         </div>
     </div>
 
