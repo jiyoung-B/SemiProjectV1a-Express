@@ -8,9 +8,10 @@ router.get('/', (req, res) => {
     res.render('board', {title: '게시판'});
 });
 
-router.get('/list', (req, res) => {
-    // res.sendFile(path.join(__dirname, '../public', 'list.html'));
-    res.render('board/list', {title: '게시판 목록'});
+router.get('/list', async (req, res) => {
+    let bds = new Board().select().then((bds) => bds);
+   //  console.log(await bds);
+    res.render('board/list', {title: '게시판 목록', bds: await bds});
 });
 
 router.get('/write', (req, res) => {
@@ -23,7 +24,7 @@ router.post('/write', async (req, res) => {
     let { title, uid, contents } = req.body;
     let rowcnt = new Board(null, title, uid, null, contents, null).insert().then((result) => result);
     if(await rowcnt > 0) viewName = '/board/list';
-    console.log('로우카운트 : ' , rowcnt);
+    // console.log('로우카운트 : ' , rowcnt);
     res.redirect(303, viewName);
 });
 // 데이터받아다가, insert 에서 처리후, list 로 넘어가야겠죵
