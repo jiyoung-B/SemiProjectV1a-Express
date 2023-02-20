@@ -4,7 +4,9 @@ let boardsql = {
     select: ' select bno, title, userid, views, ' +
             ` to_char(regdate, 'YYYY-MM-DD') regdate ` +
             'from board2 order by bno desc',
-    selectOne: ' select * from board2 where bno = :1 ',
+    selectOne: ' select board2.*, ' +
+                `to_char(regdate, 'YYYY-MM-DD HH24:MI:SS') ` +
+                ' regdate2 from board2 where bno = :1 ',
     update: 'update board2 set title = :1 , contents = :2 where bon = :3;',
     delete: 'delete from board2 where bno = :1;'
 }
@@ -62,18 +64,28 @@ class Board {
         return bds;
     }
 
-    async selectOne() {
+    async selectOne(bno) { // 본문조회 생성자를 통해서 받지말고 직접매개변수로받음
         let conn = null;
-        let params = [];
-        let insertcnt = 0;
+        let params = [bno];
+        let bds = [];
 
         try{
             conn = await oracledb.makeConn();
+            let result = await conn.execute(boardsql.selectOne, params, oracledb.options);
+            let rs = result.resultSet;
+            let row = null;
+
+            while((row = await rs.getRow())){
+                let bd = new Board(row.BNO, row.TITLE, row.USERID,
+                    row.REGDATE2, row.CONTENTS, row.MAX_VIEWS_OVR);
+                bds.push(bd);
+            }
         }catch(e){
             console.log(e);
         }finally {
             await oracledb.closeConn();
         }
+        return bds;
     }
 
     async update() {

@@ -29,9 +29,11 @@ router.post('/write', async (req, res) => {
 });
 // 데이터받아다가, insert 에서 처리후, list 로 넘어가야겠죵
 
-router.get('/view', (req, res) => {
-    // res.sendFile(path.join(__dirname, '../public', 'view.html'));
-    res.render('board/view', {title: '게시판 본문보기'});
+router.get('/view', async (req, res) => {
+    let bno = req.query.bno;
+    let bds = new Board().selectOne(bno).then((bds) => bds);
+
+    res.render('board/view', {title: '게시판 본문보기', bds: await bds});
 });
 
 router.get('/delete', (req, res) => {
