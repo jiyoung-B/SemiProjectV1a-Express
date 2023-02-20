@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const router = express.Router();
+const Board = require('../models/Board');
 
 router.get('/', (req, res) => {
     // res.sendFile(path.join(__dirname, '../public', 'board.html'));
@@ -16,6 +17,16 @@ router.get('/write', (req, res) => {
     // res.sendFile(path.join(__dirname, '../public', 'write.html'));
     res.render('board/write', {title: '게시판 새글쓰기'});
 });
+
+router.post('/write', async (req, res) => {
+    let viewName = '/board/failWrite';
+    let { title, uid, contents } = req.body;
+    let rowcnt = new Board(null, title, uid, null, contents, null).insert().then((result) => result);
+    if(await rowcnt > 0) viewName = '/board/list';
+    console.log('로우카운트 : ' , rowcnt);
+    res.redirect(303, viewName);
+});
+// 데이터받아다가, insert 에서 처리후, list 로 넘어가야겠죵
 
 router.get('/view', (req, res) => {
     // res.sendFile(path.join(__dirname, '../public', 'view.html'));

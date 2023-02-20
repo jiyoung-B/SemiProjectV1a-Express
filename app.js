@@ -52,8 +52,10 @@ app.use('/board', boardRouter);
 // 404, 500 응답코드에 대한 라우팅 처리 정의
 app.use((req, res) => {
     res.status(404);
-    res.send(path.join(__dirname, 'public', '404.html'));
+   // res.send(path.join(__dirname, 'public', '404.html'));
+    res.send('404 - 페이지가 없어요!');
 });
+
 app.use((err, req, res, next) => {
     console.log(err); // 오류메세지 출력
     res.status(500);
