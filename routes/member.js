@@ -29,7 +29,7 @@ router.get('/login', (req, res) => {
 router.post('/login', async(req, res) => {
     let { uid, pwd} = req.body;
     let viewName = '/member/loginfail';
-    let isLogin = new Member().selectOne(uid, pwd).then(result => result);
+    let isLogin = new Member().login(uid, pwd).then(result => result);
     // console.log(await isLogin); // 로그인 가능한 값은 1, 비정상은 0
     if (await isLogin > 0 ){
         viewName = '/member/myinfo'
@@ -44,9 +44,10 @@ router.get('/logout', (req, res) => {
     res.redirect(303, '/');
 });
 
-router.get('/myinfo', (req, res) => {
+router.get('/myinfo', async (req, res) => {
     if(req.session.userid){ // 세션변수 userid가 존재한다면
-        res.render('myinfo', {title: '회원정보'});
+        let member = new Member().selectOne(req.session.userid).then((mb) => mb);
+        res.render('myinfo', {title: '회원정보', mb: await member});
     }else {
         res.redirect(303, '/member/login');
     }

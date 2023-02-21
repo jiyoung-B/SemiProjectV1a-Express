@@ -15,11 +15,15 @@
 {{/section}}
 <main>
     <h2>회원정보</h2>
+
     <table class="myinfo">
-        <tr><td>아이디</td><td>catgirl</td></tr>
-        <tr><td>이름</td><td>으하하하</td></tr>
-        <tr><td>이메일</td><td>catgir1@naver.com</td></tr>
-        <tr><td>가입일</td><td>2014-05-01 12:01:33</td></tr>
+    {{#mb}}
+        <tr><td>아이디</td><td>{{userid}}</td></tr>
+        <tr><td>이름</td><td>{{name}}</td></tr>
+        <tr><td>이메일</td><td>{{email}}</td></tr>
+        <tr><td>가입일</td><td>{{regdate}}</td></tr>
+    {{/mb}}
     </table>
+
 
 </main>

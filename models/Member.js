@@ -4,6 +4,9 @@ let membersql = {
                  ' values (mno.nextval, :1, :2, :3, :4) ',
     loginsql : ' select count(userid) cnt from member ' +  // count(*) 하지마. 아이디/비번 중 뭐 틀렸는지 애매하게 돌려주기
                 'where userid = :1 and passwd = :2 ',
+    selectOne : ' select member.*, ' +
+                ` to_char(regdate, 'YYYY-MM-DD HH24:MI:SS') regdate2 ` +
+                ' from member where userid = :1 '
 }
 
 class Member {
@@ -31,7 +34,7 @@ class Member {
         }
     }
 
-    async selectOne(uid, pwd) { // 로그인 처리
+    async login(uid, pwd) { // 로그인 처리
         let conn = null;
         let params = [uid, pwd];
 
@@ -56,6 +59,30 @@ class Member {
     }
 
     // 멤버 전체조회
+    async selectOne(uid) { // 아이디로 검색된 회원의 모든 정보 조회
+        let conn = null;
+        let params = [uid];
+        let members = [];
+
+        try{
+            conn = await oracledb.makeConn();
+            let result = await conn.execute(membersql.selectOne, params, oracledb.options);
+            let rs = result.resultSet;
+            let row = null;
+
+            while((row = await rs.getRow())){
+                let m = new Member(row.USERID, '', row.NAME, row.EMAIL);
+                m.regdate =row.REGDATE2; // 생성자에서 지원하지 않는 변수는 따로 만들어
+                members.push(m);
+            }
+            conn.commit();
+        }catch(e){
+            console.log(e);
+        }finally {
+            await oracledb.closeConn();
+        }
+        return members;
+    }
 
     // 멤버 상세조회
 
