@@ -1,6 +1,6 @@
-let frm = document.login;
-const processLogin = () => {
 
+const processLogin = () => {
+    let frm = document.login;
     if (frm.uid.value === '') alert('아이디는?');
     else if (frm.pwd.value === '') alert('비번은?');
     else {

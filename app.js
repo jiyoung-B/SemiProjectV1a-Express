@@ -71,7 +71,7 @@ app.use((req, res) => {
 app.use((err, req, res, next) => {
     console.log(err); // 오류메세지 출력
     res.status(500);
-    res.send(path.join(__dirname, 'public', '500.html'));
+    res.send(path.join('500-서버 내부 오류 발생했어요!'));
 });
 
 // 위에서 설정한 사항을 토대로 express 서버 실행

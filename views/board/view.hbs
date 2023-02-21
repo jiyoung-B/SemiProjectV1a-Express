@@ -9,7 +9,9 @@
     </style>
 {{/section}}
 
+
 {{#section 'script'}}
+    <script src="/js/view.js"></script>
     <script>
         let newbtn = document.querySelector('#newbtn');
         newbtn?.addEventListener('click', () => {
@@ -34,6 +36,9 @@
         <div>
             <label class="dragup">본 문</label>
             <span id="contents">{{contents}}</span></div>
+
+            <input type="hidden" id="bno" value="{{bno}}">
+            <input type="hidden" id="uid" value="{{userid}}">
         {{/bds}}
         <div><label></label>
         {{#if session.userid}}

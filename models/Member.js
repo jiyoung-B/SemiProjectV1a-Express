@@ -3,7 +3,7 @@ let membersql = {
     insertsql : ' insert into member(mno, userid, passwd, name, email) ' +
                  ' values (mno.nextval, :1, :2, :3, :4) ',
     loginsql : ' select count(userid) cnt from member ' +  // count(*) 하지마. 아이디/비번 중 뭐 틀렸는지 애매하게 돌려주기
-                'where userid = :1 and passwd = :2 ',
+                ' where userid = :1 and passwd = :2 ',
     selectOne : ' select member.*, ' +
                 ` to_char(regdate, 'YYYY-MM-DD HH24:MI:SS') regdate2 ` +
                 ' from member where userid = :1 '
@@ -37,7 +37,6 @@ class Member {
     async login(uid, pwd) { // 로그인 처리
         let conn = null;
         let params = [uid, pwd];
-
         let isLogin = 0;
 
         try{
@@ -49,7 +48,7 @@ class Member {
             while((row = await rs.getRow())){
                 isLogin = row.CNT;
             }
-            conn.commit();
+
         }catch(e){
             console.log(e);
         }finally {

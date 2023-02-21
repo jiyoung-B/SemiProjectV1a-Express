@@ -27,10 +27,11 @@ router.get('/login', (req, res) => {
 });
 
 router.post('/login', async(req, res) => {
-    let { uid, pwd} = req.body;
+    let { uid, pwd } = req.body;
     let viewName = '/member/loginfail';
+    console.log(uid);
     let isLogin = new Member().login(uid, pwd).then(result => result);
-    // console.log(await isLogin); // 로그인 가능한 값은 1, 비정상은 0
+     console.log(await isLogin); // 로그인 가능한 값은 1, 비정상은 0
     if (await isLogin > 0 ){
         viewName = '/member/myinfo'
         req.session.userid = uid; // 입력받은 아이디를 세션변수로 등록

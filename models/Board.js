@@ -8,8 +8,9 @@ let boardsql = {
                 `to_char(regdate, 'YYYY-MM-DD HH24:MI:SS') ` +
                 ' regdate2 from board2 where bno = :1 ',
     viewOne: ' update board2 set views = views + 1 where bno = :1 ',
-    update: 'update board2 set title = :1 , contents = :2 where bon = :3;',
-    delete: 'delete from board2 where bno = :1;'
+    update: ' update board2 set title = :1 , contents = :2, ' +
+            ' regdate = current_timestamp where bno = :3 ',
+    delete: ' delete from board2 where bno = :1 '
 
 
 }
@@ -78,9 +79,10 @@ class Board {
             let rs = result.resultSet;
             let row = null;
 
+
             while((row = await rs.getRow())){
                 let bd = new Board(row.BNO, row.TITLE, row.USERID,
-                    row.REGDATE2, row.CONTENTS, row.MAX_VIEWS_OVR);
+                    row.REGDATE2, row.CONTENTS, row.VIEWS);
                 bds.push(bd);
             }
             await conn.execute(boardsql.viewOne, params); // 조회수 증가!
@@ -93,32 +95,41 @@ class Board {
         return bds;
     }
 
-    async update() {
+    async update(bno) {
         let conn = null;
-        let params = [];
-        let insertcnt = 0;
+        let params = [this.title, this.contents, bno];
+        let updateCnt = 0;
+
 
         try{
             conn = await oracledb.makeConn();
+            let result = await conn.execute(boardsql.update, params);
+            await conn.commit();
+            if(result.rowsAffected > 0) updateCnt = result.rowsAffected;
         }catch(e){
             console.log(e);
         }finally {
             await oracledb.closeConn();
         }
+        return updateCnt;
     }
 
-    async delete() {
+    async delete(bno) {
         let conn = null;
-        let params = [];
-        let insertcnt = 0;
+        let params = [bno];
+        let deletecnt = 0;
 
         try{
             conn = await oracledb.makeConn();
+            let result = await conn.execute(boardsql.delete, params);
+            await conn.commit();
+            if(result.rowsAffected>0) deletecnt = result.rowsAffected;
         }catch(e){
             console.log(e);
         }finally {
             await oracledb.closeConn();
         }
+        return deletecnt;
     }
 
 }

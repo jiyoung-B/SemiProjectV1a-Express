@@ -35,18 +35,46 @@ router.post('/write', async (req, res) => {
 router.get('/view', async (req, res) => {
     let bno = req.query.bno;
     let bds = new Board().selectOne(bno).then((bds) => bds);
+    console.log(await bds);
 
     res.render('board/view', {title: '게시판 본문보기', bds: await bds});
 });
 
-router.get('/delete', (req, res) => {
-    // res.sendFile(path.join(__dirname, '../public', 'delete.html'));
-    res.render('delete', {title: '게시글 삭제'});
+router.get('/delete', async (req, res) => {
+    console.log('req.query :', req.query);
+    let {bno, uid} = req.query;
+    let suid = req.session.userid
+    if(suid && uid &&(suid == uid)){ // 글 작성자와 삭제자가 일치하는 경우
+        new Board().delete(bno).then(cnt => cnt);
+    }
+    res.redirect(303, '/board/list');
 });
 
-router.get('/update', (req, res) => {
-    // res.sendFile(path.join(__dirname, '../public', 'update.html'));
-    res.render('board/update', {title: '게시글 수정'});
+router.get('/update', async (req, res) => {
+    let { bno, uid } = req.query;
+    let suid = req.session.userid;
+
+    if (uid && suid && (uid == suid)){
+        let bds = new Board().selectOne(bno).then(bds => bds)
+        res.render('board/update', {title: '게시판 수정하기', bds: await bds});
+    } else {
+        res.redirect(303, '/board/list')
+    }
+});
+
+router.post('/update', async (req, res) => {
+    let { title, uid, contents } = req.body;
+    let bno = req.query.bno;
+    let suid = req.session.userid;
+
+    if (uid && suid && (uid == suid)) {
+        // bno, title, userid, regdate, contents, views
+        new Board(bno, title, uid, 0, contents, 0).update(bno).then(cnt => cnt)
+        res.redirect(303, `/board/view?bno=${bno}`);
+    }else {
+        res.redirect(303, '/board/list');
+    }
+
 });
 
 module.exports = router;
