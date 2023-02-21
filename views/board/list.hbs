@@ -23,7 +23,11 @@
 {{#section 'script'}}
 <script>
     let newbtn = document.querySelector('#newbtn');
-    newbtn.addEventListener('click', () => {
+    // optional chaining (?.)
+    // ? 앞의 객체변수가 null이거나 undefined라면
+    // . 뒤의 코드를 실행하지 않음. 뒤에는 실행하지 않움
+    // 지원하지 않는다면, if 로 해야함
+    newbtn?.addEventListener('click', () => {
         location.href = '/board/write';
     });
 </script>
@@ -40,7 +44,19 @@
                 <col style="width: 15%">
                 <col style="width: 10%">
             </colgroup>
+{{#if session.userid}}
             <tr><td colspan="5" class="alignrgt"><button type="button" id="newbtn"> <!--onclick="location.href='write'"-->새글쓰기</button></td> </tr>
+{{else}}
+    &nbsp;
+<!--            <tr><td colspan="5" class="alignrgt"><a href="/member/login">로그인하고 새글작성하기</a></td> </tr>-->
+{{/if}}
+
+<!--            라인 안에 작성하므로 비추-->
+<!--    <tr><td colspan="5" class="alignrgt"><button type="button" id="newbtn" {{#if session.userid}} {{else}} disabled {{/if}}>새글쓰기</button></td> </tr>-->
+
+
+
+
             <tr><th>번호</th><th>제목</th><th>작성자</th><th>작성일</th><th>조회</th></tr>
             {{#bds}}
             <tr><td>{{bno}}</td><td><a href="/board/view?bno={{bno}}">{{title}}</a></td>
