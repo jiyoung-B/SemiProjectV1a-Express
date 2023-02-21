@@ -12,7 +12,7 @@
 {{#section 'script'}}
     <script>
         let newbtn = document.querySelector('#newbtn');
-        newbtn.addEventListener('click', () => {
+        newbtn?.addEventListener('click', () => {
             location.href = '/board/write';
         });
     </script>
@@ -40,7 +40,7 @@
         <button type="button"
                 onclick="location.href='/board/write'">새글쓰기</button> {{/if}}
         <button type="button" onclick="location.href='/board/list'">목록으로</button>
-         {{#if session.userid}}
+         {{#if (eq session.userid bds.[0].userid)}}
         <button type="button" id="updatebtn">수정하기</button>
         <button type="button" id="deletebtn">삭제하기</button>{{/if}}
 

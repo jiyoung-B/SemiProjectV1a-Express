@@ -21,13 +21,7 @@ const port = process.env.PORT || 3000; // 환경변수로 포트가 설정되어
 app.engine('hbs', engine({
     extname: '.hbs',
     defaultLayout: 'layout',
-    helpers: {
-        section: function(name, options) {
-            if(!this._sections) this._sections = {}
-            this._sections[name] = options.fn(this)
-            return null
-        },
-    },
+    helpers: require('./helpers/handlebars-helper'),
 }));
 app.set('views', path.join(__dirname, 'views')); // 디렉토리 만들기
 app.set('view engine', 'hbs');
