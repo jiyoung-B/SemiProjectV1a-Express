@@ -2,78 +2,22 @@
 {{/section}}
 
 {{#section 'script'}}
-    <script>
-        const getGugun = () => {
-            let url = '?sido=' + sido.value;
-            location.href = url;
-
-        }
-        const getDong = () => {
-            let url = '?sido=' + sido.value + '&gugun=' + gugun.value;
-            location.href = url;
-        }
-        const getZipcode = () => {
-            let url = '?sido=' + sido.value + '&gugun=' + gugun.value + '&dong=' + dong.value;
-            location.href = url;
-        }
-        let sido = document.querySelector('#sido');
-        let gugun = document.querySelector('#gugun');
-        let dong = document.querySelector('#dong');
-
-        sido.addEventListener('change', getGugun);
-        gugun.addEventListener('change', getDong);
-        dong.addEventListener('change', getZipcode);
-    </script>
-    <script>
-        {{#if sido}}
-        // 서버에서 넘겨받은 값 셋팅. 서버에서 sido가 넘어왔을 때
-        document.querySelector('#sido').value='{{sido}}';
-        {{/if}}
-
-        {{#if gugun}}
-        // 서버에서 넘겨받은 값 셋팅. 서버에서 gugun이 넘어왔을 때
-        document.querySelector('#gugun').value='{{gugun}}';
-        {{/if}}
-
-        {{#if dong}}
-        // 서버에서 넘겨받은 값 셋팅. 서버에서 dong이 넘어왔을 때
-        document.querySelector('#dong').value='{{dong}}';
-        {{/if}}
-
-
-
-
-    </script>
-
+<script src="/js/zipcode2.js"></script>
 {{/section}}
+
 <main>
-    <h1>시군구동 찾기</h1>
+    <h1>시군구동 찾기 v2</h1>
     <div>
         <select name="sido" id="sido">
             <option>-- 시도 --</option>
-            {{#sidos}}
-            <option>{{sido}}</option>
-            {{/sidos}}
         </select>
         <select name="gugun" id="gugun">
             <option>-- 시군구 --</option>
-        {{#guguns}}
-            <option>{{gugun}}</option>
-        {{/guguns}}
         </select>
         <select name="dong" id="dong">
             <option>-- 읍면동 --</option>
-        {{#dongs}}
-            <option>{{dong}}</option>
-        {{/dongs}}
         </select>
     </div>
 
-    <div>
-        {{#zips}}
-            <p><!--json 객체의 키로 값으로 찍으면 됩니다.-->
-            {{zipcode}} {{sido}} {{gugun}} {{dong}} {{ri}} {{bunji}}
-            </p>
-        {{/zips}}
-    </div>
+    <div id="zipcode"></div>
 </main>
