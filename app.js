@@ -12,6 +12,7 @@ const indexRouter = require('./routes/index');
 const memberRouter = require('./routes/member');
 const boardRouter = require('./routes/board');
 const zipcodeRouter = require('./routes/zipcode');
+const zipcode2Router = require('./routes/zipcode2');
 
 // express 객체 생성 및 포트 변수 선언
 const app = express();
@@ -62,6 +63,7 @@ app.use('/', indexRouter);
 app.use('/member', memberRouter);
 app.use('/board', boardRouter);
 app.use('/zipcode', zipcodeRouter);
+app.use('/zipcode2', zipcode2Router);
 
 // 404, 500 응답코드에 대한 라우팅 처리 정의
 app.use((req, res) => {
