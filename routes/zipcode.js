@@ -7,6 +7,7 @@ router.get('/', async (req, res) => {
     let sido = req.query.sido;
     let gugun = req.query.gugun;
     let dong = req.query.dong;
+
     let [guguns, dongs, zips] = [null, null, null];
 
     let sidos = new Zipcode().getSido().then((sido) => sido);

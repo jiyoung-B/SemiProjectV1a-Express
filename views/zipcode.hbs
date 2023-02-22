@@ -2,13 +2,35 @@
 {{/section}}
 
 {{#section 'script'}}
-    <script src="/js/zipcode.js"></script>
     <script>
+        const getGugun = () => {
+            let url = '?sido=' + sido.value;
+            location.href = url;
+
+        }
+        const getDong = () => {
+            let url = '?sido=' + sido.value + '&gugun=' + gugun.value;
+            location.href = url;
+        }
         let sido = document.querySelector('#sido');
+        let gugun = document.querySelector('#gugun');
+        let dong = document.querySelector('#dong');
+
+        sido.addEventListener('change', getGugun);
+        gugun.addEventListener('change', getDong);
+    </script>
+    <script>
         {{#if sido}}
-        // 서버에서 넘겨받은 값 셋팅. 서버가 sido가 넘어왔을 때
-         document.querySelector('#sido').value='{{sido}}';
+        // 서버에서 넘겨받은 값 셋팅. 서버에서 sido가 넘어왔을 때
+        document.querySelector('#sido').value='{{sido}}';
         {{/if}}
+
+        {{#if gugun}}
+        // 서버에서 넘겨받은 값 셋팅. 서버에서 gugun이 넘어왔을 때
+        document.querySelector('#gugun').value='{{gugun}}';
+        {{/if}}
+
+
     </script>
 
 {{/section}}
