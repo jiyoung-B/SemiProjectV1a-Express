@@ -61,7 +61,7 @@ app.use(function(req, res, next){
 app.use('/', indexRouter);
 app.use('/member', memberRouter);
 app.use('/board', boardRouter);
-app.use('/zipcode', boardRouter);
+app.use('/zipcode', zipcodeRouter);
 
 // 404, 500 응답코드에 대한 라우팅 처리 정의
 app.use((req, res) => {

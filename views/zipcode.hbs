@@ -3,6 +3,14 @@
 
 {{#section 'script'}}
     <script src="/js/zipcode.js"></script>
+    <script>
+        let sido = document.querySelector('#sido');
+        {{#if sido}}
+        // 서버에서 넘겨받은 값 셋팅. 서버가 sido가 넘어왔을 때
+         document.querySelector('#sido').value='{{sido}}';
+        {{/if}}
+    </script>
+
 {{/section}}
 <main>
     <h1>시군구동 찾기</h1>
