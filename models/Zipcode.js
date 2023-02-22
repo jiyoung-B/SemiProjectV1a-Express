@@ -79,22 +79,31 @@ class Zipcode {
         }
         return dongs;
     }
-    async getZipcode() {
+    async getZipcode(sido, gugun, dong) {
         let conn = null;
-        let params = [];
-        let zipcodes = [];
+        let params = [sido, gugun, dong];
+        let zips = [];
 
         try {
             conn = await oracledb.makeConn();
+            let result = await conn.execute(zipcodesql.zipsql, params, oracledb.options);
+            let rs = result.resultSet;
 
+            let row = null
+            while ((row = await rs.getRow())) {
+                let zip = {'zipcode': row.ZIPCODE, 'sido' : row.SIDO,
+                'gugun': row.GUGUN, 'dong': row.DONG, 'ri':row.RI,
+                'bunji': row.BUNJI};
+                zips.push(zip);
+            }
         } catch (e) {
             console.log(e)
         } finally {
             await oracledb.closeConn(conn);
-
         }
-        return zipcodes;
+        return zips;
     }
 
 };
+
 module.exports = Zipcode;

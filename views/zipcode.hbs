@@ -12,12 +12,17 @@
             let url = '?sido=' + sido.value + '&gugun=' + gugun.value;
             location.href = url;
         }
+        const getZipcode = () => {
+            let url = '?sido=' + sido.value + '&gugun=' + gugun.value + '&dong=' + dong.value;
+            location.href = url;
+        }
         let sido = document.querySelector('#sido');
         let gugun = document.querySelector('#gugun');
         let dong = document.querySelector('#dong');
 
         sido.addEventListener('change', getGugun);
         gugun.addEventListener('change', getDong);
+        dong.addEventListener('change', getZipcode);
     </script>
     <script>
         {{#if sido}}
@@ -29,6 +34,13 @@
         // 서버에서 넘겨받은 값 셋팅. 서버에서 gugun이 넘어왔을 때
         document.querySelector('#gugun').value='{{gugun}}';
         {{/if}}
+
+        {{#if dong}}
+        // 서버에서 넘겨받은 값 셋팅. 서버에서 dong이 넘어왔을 때
+        document.querySelector('#dong').value='{{dong}}';
+        {{/if}}
+
+
 
 
     </script>
@@ -55,5 +67,13 @@
             <option>{{dong}}</option>
         {{/dongs}}
         </select>
+    </div>
+
+    <div>
+        {{#zips}}
+            <p><!--json 객체의 키로 값으로 찍으면 됩니다.-->
+            {{zipcode}} {{sido}} {{gugun}} {{dong}} {{ri}} {{bunji}}
+            </p>
+        {{/zips}}
     </div>
 </main>
