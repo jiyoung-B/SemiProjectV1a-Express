@@ -12,7 +12,7 @@
 
         .pagenation { list-style: none; padding: 0; margin:0 auto; width: 435px; }
         .pagenation li { display: inline-block; padding: 10px; }
-        .cpage { font: bold 20px '맑은고딕'; color: red;}
+        .cpage { font: bold 30px '맑은고딕'; color: red;}
         .prev { color: #cccccc;}
         .alignrgt { text-align-last: right;}
 
@@ -65,9 +65,15 @@
         </table>
 
         <ul class="pagenation">
-            <li class="prev">이전</li>
-            <li class="cpage">1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li>
-            <li>다음</li>
+            <li> <a href="?cpg={{pgn.prev}}">이전</a> </li>
+            {{#stpgns}}
+                {{#if iscpg}}
+                    <li class="cpage">{{num}}</li>
+                {{else}}
+                    <li><a href="?cpg={{num}}">{{num}}</a></li>
+                {{/if}}
+            {{/stpgns}}
+            <li> <a href="?cpg={{pgn.next}}">다음</a> </li>
         </ul>
     </div>
 
