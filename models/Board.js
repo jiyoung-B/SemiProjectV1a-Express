@@ -21,6 +21,13 @@ let boardsql = {
 
 
 }
+// 동적쿼리 생성 함수
+const makeWhere = (ftype, fkey) => {
+    let where = ` where title = '${fkey}' `;
+    if(ftype == 'userid') where = ` where userid = '${fkey}' `;
+    else if(ftype == 'contents') where = ` where contents like '%${fkey}%' `; // contents는 =으로 검색 안되니 like %로 한다!
+    return where;
+}
 
 class Board {
 
@@ -51,18 +58,26 @@ class Board {
         return insertcnt;
     }
 
-    async select(stnum) { // 게시판 목록 출력
+    async select(stnum, ftype, fkey) { // 게시판 목록 출력
         let conn = null;
         let params = [stnum, stnum + ppg];
         let bds = []; // 결과 저장용
         let allcnt = -1;
+        let where = '';
+
+        if(fkey != undefined) where = makeWhere(ftype, fkey); // 밖에서 만들어오면 좋지만 개념자체는 동적쿼리니까 sql문에 넣었습니다.
 
         try{
             conn = await oracledb.makeConn();
-            allcnt = await this.selectCount(conn); // 총 게시글 수 계산
+            allcnt = await this.selectCount(conn, where); // 총 게시글 수 계산
             let idx = allcnt - stnum + 1;
-
-            let result = await conn.execute(boardsql.paging1 + boardsql.paging2, params, oracledb.options);
+            /**
+             * select * from (select board2.*, row_number() over (order by bno desc) rowno from board2 where title = '오로라')
+             * bd2 where rowno >=11 and rowno <16;
+            */
+                // makeWhere(ftype, fkey)(
+            let result = await conn.execute(boardsql.paging1 + where + boardsql.paging2, params, oracledb.options);
+            //파라미터는 값만 가져올 수 잇어. :1, :2 등. 컬럼명 자체를 매개변수로 받아올순 없다.
             let rs = result.resultSet;
             let row = null;
 
@@ -80,11 +95,11 @@ class Board {
         let result ={'bds': bds, 'allcnt': allcnt}
         return result;
     }
-    async selectCount(conn) { // 총 게시물 수 계산
+    async selectCount(conn, where) { // 총 게시물 수 계산
         let params = [];
         let cnt = -1; // 결과 저장용
         try{
-            let result = await conn.execute(boardsql.selectCount, params, oracledb.options);
+            let result = await conn.execute(boardsql.selectCount + where, params, oracledb.options);
             let rs = result.resultSet;
             let row = null;
             if ((row = await rs.getRow())) cnt = row.CNT;

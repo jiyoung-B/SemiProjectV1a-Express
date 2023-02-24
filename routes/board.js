@@ -19,11 +19,12 @@ router.get('/', (req, res) => {
 // ednum : stnum + ppg
 // 수식
 router.get('/list', async (req, res) => {
-    let {cpg} = req.query;
+    let [cpg, ftype, fkey] = [ req.query.cpg, req.query.ftype, req.query.fkey];
+    console.log('검색 ftype, fkey :', ftype, fkey);
     cpg = cpg ? parseInt(cpg) : 1; // 문자로 인식하므로 숫자로 바꿉니다.
     let stnum = (cpg - 1) * ppg +1; // 지정한 페이지 범위의 시작값 계산
 
-    let result = new Board().select(stnum).then((result) => result);
+    let result = new Board().select(stnum, ftype, fkey).then((result) => result);
     let bds = result.then(r => r.bds);
     let allcnt = result.then(r => r.allcnt); // 총 게시물 수
 
@@ -67,7 +68,10 @@ router.get('/list', async (req, res) => {
     console.log(cpg, stnum, stpgn);
     //let bds = new Board().select().then((bds) => bds);
    //  console.log(await bds);
-    res.render('board/list', {title: '게시판 목록', bds: await bds, stpgns: stpgns, pgn: pgn});
+    // 질의문자열 정의
+    let qry = fkey ? `&ftype=${ftype}&fkey=${fkey}`:``;
+
+    res.render('board/list', {title: '게시판 목록', bds: await bds, stpgns: stpgns, pgn: pgn, qry: qry});
 });
 
 router.get('/write', (req, res) => {

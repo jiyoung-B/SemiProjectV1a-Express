@@ -6,7 +6,8 @@
         .board th { padding: 7px; background: lightgoldenrodyellow; }
         .board tr:nth-child(odd) { background: #cef279; }
         .board tr:nth-child(even) { background:  #e4f7ba;}
-        .alignrgt { text-align: right; border: 1px solid black;}
+        .alignrgt { text-align-last: right;}
+        .alignlft { text-align-last: left; !important;}
         .board td:nth-child(2), .board th:nth-child(2){text-align: left}
 
 
@@ -14,7 +15,11 @@
         .pagenation li { display: inline-block; padding: 6px; }
         .cpage { font: bold 30px '맑은고딕'; color: red;}
         .prev { color: #cccccc;}
-        .alignrgt { text-align-last: right;}
+
+        select { padding: 3px; }
+        input[type="text"] { padding: 3px; }
+
+
 
     </style>
 
@@ -23,13 +28,20 @@
 {{#section 'script'}}
 <script>
     let newbtn = document.querySelector('#newbtn');
+    let findbtn = document.querySelector('#findbtn');
+    let ftype = document.querySelector('#ftype');
+    let fkey = document.querySelector('#fkey');
+
     // optional chaining (?.)
     // ? 앞의 객체변수가 null이거나 undefined라면
     // . 뒤의 코드를 실행하지 않음. 뒤에는 실행하지 않움
     // 지원하지 않는다면, if 로 해야함
-    newbtn?.addEventListener('click', () => {
-        location.href = '/board/write';
-    });
+    newbtn?.addEventListener('click', () => {location.href = '/board/write';});
+    findbtn?.addEventListener('click', () => {
+        if(fkey.value){ // fkey에 값이 존재한다면 (undefined가 아니라면)
+            let qry = '?ftype=' + ftype.value + '&fkey=' + fkey.value;
+            location.href = '/board/list' + qry;
+        } });
 </script>
 
 {{/section}}
@@ -44,18 +56,30 @@
                 <col style="width: 15%">
                 <col style="width: 10%">
             </colgroup>
-{{#if session.userid}}
-            <tr><td colspan="5" class="alignrgt"><button type="button" id="newbtn"> <!--onclick="location.href='write'"-->새글쓰기</button></td> </tr>
-{{else}}
-    &nbsp;
-<!--            <tr><td colspan="5" class="alignrgt"><a href="/member/login">로그인하고 새글작성하기</a></td> </tr>-->
-{{/if}}
+
+            <tr>
+        {{!--#if session.userid--}}
+<!--            select * from board2 where userid = 'abc123'-->
+            <td colspan="3" class="alignlft">
+                <select name="ftype" id="ftype">
+                    <option value="title">제  목</option>
+                    <option value="userid">작성자</option>
+                    <option value="contents">본  문</option>
+                </select>
+                <input type="text" name="fkey" id="fkey">
+                <button type="button" id="findbtn">검색하기</button>
+            </td>
+            <td colspan="2" class="alignrgt">
+            <button type="button" id="newbtn"> <!--onclick="location.href='write'"-->새글쓰기</button></td>
+        {{!--else--}}
+
+        {{!--/if--}}
+
+
+        </tr>
 
 <!--            라인 안에 작성하므로 비추-->
 <!--    <tr><td colspan="5" class="alignrgt"><button type="button" id="newbtn" {{#if session.userid}} {{else}} disabled {{/if}}>새글쓰기</button></td> </tr>-->
-
-
-
 
             <tr><th>번호</th><th>제목</th><th>작성자</th><th>작성일</th><th>조회</th></tr>
             {{#bds}}
@@ -66,25 +90,25 @@
 
         <ul class="pagenation">
             {{#if pgn.isprev}}
-                <li> <a href="?cpg={{pgn.prev}}">이전</a> </li>
+                <li> <a href="?cpg={{pgn.prev}}{{qry}}">이전</a> </li>
             {{/if}}
-{{#if pgn.isprev10}}
-                 <li> <a href="?cpg={{pgn.prev10}}">이전-10</a> </li>
-{{/if}}
+            {{#if pgn.isprev10}}
+                 <li> <a href="?cpg={{pgn.prev10}}{{qry}}">이전-10</a> </li>
+            {{/if}}
 
             {{#stpgns}}
                 {{#if iscpg}}
                     <li class="cpage">{{num}}</li>
                 {{else}}
-                    <li><a href="?cpg={{num}}">{{num}}</a></li>
+                    <li><a href="?cpg={{num}}{{../qry}}">{{num}}</a></li>
                 {{/if}}
             {{/stpgns}}
-{{#if pgn.isnext10}}
-                <li> <a href="?cpg={{pgn.next10}}">다음 +10</a> </li>
-{{/if}}
+            {{#if pgn.isnext10}}
+                <li> <a href="?cpg={{pgn.next10}}{{qry}}">다음 +10</a> </li>
+            {{/if}}
 
             {{#if pgn.isnext}}
-            <li> <a href="?cpg={{pgn.next}}">다음</a> </li>
+            <li> <a href="?cpg={{pgn.next}}{{qry}}">다음</a> </li>
             {{/if}}
         </ul>
     </div>
