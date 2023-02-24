@@ -23,7 +23,11 @@ router.get('/list', async (req, res) => {
     cpg = cpg ? parseInt(cpg) : 1; // 문자로 인식하므로 숫자로 바꿉니다.
     let stnum = (cpg - 1) * ppg +1; // 지정한 페이지 범위의 시작값 계산
 
-    let allcnt = new Board().selectCount().then((cnt) => cnt); // 총 게시물 수
+    let result = new Board().select(stnum).then((result) => result);
+    let bds = result.then(r => r.bds);
+    let allcnt = result.then(r => r.allcnt); // 총 게시물 수
+
+    // let allcnt = new Board().selectCount().then((cnt) => cnt); // 총 게시물 수 => 지우고 통일해서 쓴다.
     let alpg = Math.ceil(await allcnt / ppg) // 총 페이지 수 계산
 
     // 페이지네이션 블럭 생성
@@ -59,7 +63,7 @@ router.get('/list', async (req, res) => {
                 'isprev': isprev, 'isnext': isnext,
                 'isprev10': isprev10, 'isnext10': isnext10};
 
-    let bds = new Board().select(stnum).then((bds) => bds);
+
     console.log(cpg, stnum, stpgn);
     //let bds = new Board().select().then((bds) => bds);
    //  console.log(await bds);
