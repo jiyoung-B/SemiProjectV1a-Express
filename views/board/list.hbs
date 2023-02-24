@@ -58,8 +58,7 @@
             </colgroup>
 
             <tr>
-        {{!--#if session.userid--}}
-<!--            select * from board2 where userid = 'abc123'-->
+<!--        select * from board2 where userid = 'abc123'-->
             <td colspan="3" class="alignlft">
                 <select name="ftype" id="ftype">
                     <option value="title">제  목</option>
@@ -67,14 +66,12 @@
                     <option value="contents">본  문</option>
                 </select>
                 <input type="text" name="fkey" id="fkey">
-                <button type="button" id="findbtn">검색하기</button>
+                <button type="button" id="findbtn"
+                        {{#unless session.userid}}disabled{{/unless}}>검색하기</button>
             </td>
             <td colspan="2" class="alignrgt">
-            <button type="button" id="newbtn"> <!--onclick="location.href='write'"-->새글쓰기</button></td>
-        {{!--else--}}
-
-        {{!--/if--}}
-
+            <button type="button" id="newbtn"
+                    {{#unless session.userid}}disabled{{/unless}}>새글쓰기</button></td>
 
         </tr>
 
